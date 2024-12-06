@@ -1,0 +1,42 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    function isValidSize() {
+      return request.resource.size <= 10 * 1024 * 1024; // 10MB
+    }
+
+    // Profile photos
+    match /profile-photos/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && 
+        request.auth.uid == userId && 
+        isImage() && 
+        isValidSize();
+    }
+
+    // Campaign images
+    match /campaign-images/{imageId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && 
+        isImage() && 
+        isValidSize();
+    }
+
+    // Event images
+    match /event-images/{imageId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && 
+        isImage() && 
+        isValidSize();
+    }
+  }
+}
