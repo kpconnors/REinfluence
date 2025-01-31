@@ -1,64 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import Sidebar from '../Dashboard/Sidebar';
-import { ChevronDown, Plus, HelpCircle } from 'lucide-react';
-import EventsList from './EventsList';
-import PartnersList from './PartnersList';
-import ExclusivePartnersList from './ExclusivePartnersList';
-import { useCampaigns } from '../../hooks/useCampaigns';
-import { useEvents } from '../../hooks/useEvents';
-import LoadingScreen from '../LoadingScreen';
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import Sidebar from "../Dashboard/Sidebar";
+import { ChevronDown, Plus, HelpCircle } from "lucide-react";
+import EventsList from "./EventsList";
+import PartnersList from "./PartnersList";
+import ExclusivePartnersList from "./ExclusivePartnersList";
+import { useCampaigns } from "../../hooks/useCampaigns";
+import { useEvents } from "../../hooks/useEvents";
+import LoadingScreen from "../LoadingScreen";
 
-type TabType = 'campaigns' | 'events' | 'partners' | 'exclusive';
+type TabType = "campaigns" | "events" | "partners" | "exclusive";
 
 export default function PartnersAndCampaigns() {
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState<TabType>('campaigns');
+  const [activeTab, setActiveTab] = useState<TabType>("campaigns");
   const { campaigns, loading, error } = useCampaigns();
   const { events, loading: eventsLoading } = useEvents();
 
   // Set initial tab based on URL query parameter
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const tab = params.get('tab');
-    if (tab && ['campaigns', 'events', 'partners', 'exclusive'].includes(tab)) {
+    const tab = params.get("tab");
+    if (tab && ["campaigns", "events", "partners", "exclusive"].includes(tab)) {
       setActiveTab(tab as TabType);
     }
   }, [location]);
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'approved':
-      case 'live':
-        return 'text-green-600';
-      case 'denied':
-        return 'text-red-600';
-      case 'draft':
-      case 'pending':
-        return 'text-blue-600';
+      case "approved":
+      case "live":
+        return "text-green-600";
+      case "denied":
+        return "text-red-600";
+      case "draft":
+      case "pending":
+        return "text-blue-600";
       default:
-        return 'text-gray-600';
+        return "text-gray-600";
     }
   };
 
   const getActionText = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'live':
-        return 'View post';
+      case "live":
+        return "View post";
       default:
-        return 'View draft';
+        return "View draft";
     }
   };
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'events':
+      case "events":
         return <EventsList />;
-      case 'partners':
+      case "partners":
         return <PartnersList />;
-      case 'exclusive':
+      case "exclusive":
         return <ExclusivePartnersList />;
-      case 'campaigns':
+      case "campaigns":
       default:
         return (
           <div className="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -104,11 +104,15 @@ export default function PartnersAndCampaigns() {
                               className="h-10 w-10 rounded object-cover"
                             />
                           ) : (
-                            <div className="h-10 w-10 rounded bg-gradient-to-br from-purple-500 to-pink-500" />
+                            <div className="h-10 w-10 rounded " />
                           )}
                           <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{campaign.title}</div>
-                            <div className="text-sm text-gray-500">{campaign.platform}</div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {campaign.title}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {campaign.platform}
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -118,8 +122,13 @@ export default function PartnersAndCampaigns() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`text-sm ${getStatusColor(campaign.status)}`}>
-                          {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
+                        <span
+                          className={`text-sm ${getStatusColor(
+                            campaign.status
+                          )}`}
+                        >
+                          {campaign.status.charAt(0).toUpperCase() +
+                            campaign.status.slice(1)}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -131,9 +140,14 @@ export default function PartnersAndCampaigns() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                    <td
+                      colSpan={4}
+                      className="px-6 py-8 text-center text-gray-500"
+                    >
                       <p className="text-lg">No campaigns found</p>
-                      <p className="text-sm mt-1">Create a new campaign to get started</p>
+                      <p className="text-sm mt-1">
+                        Create a new campaign to get started
+                      </p>
                     </td>
                   </tr>
                 )}
@@ -166,8 +180,13 @@ export default function PartnersAndCampaigns() {
         <div className="container mx-auto px-6 py-8">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h1 className="text-2xl font-semibold text-gray-900">My partners & campaigns</h1>
-              <p className="text-gray-500 mt-1">You can manage your partners and approve submitted work for your campaigns.</p>
+              <h1 className="text-2xl font-semibold text-gray-900">
+                My partners & campaigns
+              </h1>
+              <p className="text-gray-500 mt-1">
+                You can manage your partners and approve submitted work for your
+                campaigns.
+              </p>
             </div>
             <button className="flex items-center gap-2 px-4 py-2 bg-[#1d4e74] text-white rounded-md hover:bg-[#163a57] transition-colors">
               <Plus className="h-5 w-5" />
@@ -179,11 +198,11 @@ export default function PartnersAndCampaigns() {
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-8">
               <button
-                onClick={() => setActiveTab('campaigns')}
+                onClick={() => setActiveTab("campaigns")}
                 className={`flex items-center px-1 py-4 border-b-2 font-medium text-sm ${
-                  activeTab === 'campaigns'
-                    ? 'border-[#1d4e74] text-[#1d4e74]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  activeTab === "campaigns"
+                    ? "border-[#1d4e74] text-[#1d4e74]"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
                 My campaigns
@@ -192,11 +211,11 @@ export default function PartnersAndCampaigns() {
                 </span>
               </button>
               <button
-                onClick={() => setActiveTab('events')}
+                onClick={() => setActiveTab("events")}
                 className={`flex items-center px-1 py-4 border-b-2 font-medium text-sm ${
-                  activeTab === 'events'
-                    ? 'border-[#1d4e74] text-[#1d4e74]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  activeTab === "events"
+                    ? "border-[#1d4e74] text-[#1d4e74]"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
                 My events
@@ -205,21 +224,21 @@ export default function PartnersAndCampaigns() {
                 </span>
               </button>
               <button
-                onClick={() => setActiveTab('partners')}
+                onClick={() => setActiveTab("partners")}
                 className={`flex items-center px-1 py-4 border-b-2 font-medium text-sm ${
-                  activeTab === 'partners'
-                    ? 'border-[#1d4e74] text-[#1d4e74]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  activeTab === "partners"
+                    ? "border-[#1d4e74] text-[#1d4e74]"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
                 My partners
               </button>
               <button
-                onClick={() => setActiveTab('exclusive')}
+                onClick={() => setActiveTab("exclusive")}
                 className={`flex items-center px-1 py-4 border-b-2 font-medium text-sm ${
-                  activeTab === 'exclusive'
-                    ? 'border-[#1d4e74] text-[#1d4e74]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  activeTab === "exclusive"
+                    ? "border-[#1d4e74] text-[#1d4e74]"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
                 Exclusive partners
@@ -227,9 +246,7 @@ export default function PartnersAndCampaigns() {
             </nav>
           </div>
 
-          <div className="mt-6">
-            {renderContent()}
-          </div>
+          <div className="mt-6">{renderContent()}</div>
         </div>
       </main>
     </div>

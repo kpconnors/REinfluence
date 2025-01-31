@@ -1,11 +1,11 @@
-import React from 'react';
-import Sidebar from './Sidebar';
-import WelcomeCard from './WelcomeCard';
-import Updates from './Updates';
-import LatestPartnerships from './LatestPartnerships';
-import TaskList from './TaskList';
-import { useAuth } from '../../contexts/AuthContext';
-import LoadingScreen from '../LoadingScreen';
+import React from "react";
+import Sidebar from "./Sidebar";
+import WelcomeCard from "./WelcomeCard";
+import Updates from "./Updates";
+import LatestPartnerships from "./LatestPartnerships";
+import DashboardTaskList from "./TaskList";
+import { useAuth } from "../../contexts/AuthContext";
+import LoadingScreen from "../LoadingScreen";
 
 export default function Dashboard() {
   const { userProfile } = useAuth();
@@ -25,7 +25,7 @@ export default function Dashboard() {
             <LatestPartnerships />
           </div>
           <div className="mt-8">
-            <TaskList />
+            <DashboardTaskList />
           </div>
         </div>
       </main>
