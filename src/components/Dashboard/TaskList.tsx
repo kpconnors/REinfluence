@@ -1,7 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { useTasks } from "../../hooks/useTasks";
 import LoadingScreen from "../LoadingScreen";
+import { User } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../lib/firebase";
+
+// Assuming you have a method to fetch user profile photo by userId
+const getUserProfilePhoto = async (userId: string) => {
+  try {
+    const userDocRef = doc(db, "users", userId);
+    const userDoc = await getDoc(userDocRef);
+
+    if (userDoc.exists()) {
+      return userDoc.data().profilePhotoUrl || null;
+    } else {
+      console.log("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting user profile photo:", error);
+    return null;
+  }
+};
 
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
@@ -28,6 +50,27 @@ const getActionStyle = (action: string) => {
 
 export default function DashboardTaskList() {
   const { tasks, loading, error } = useTasks();
+  const { userProfile } = useAuth();
+  const [profilePhotos, setProfilePhotos] = useState<{ [key: string]: string }>(
+    {}
+  );
+
+  useEffect(() => {
+    const fetchProfilePhotos = async () => {
+      const photos: { [key: string]: string } = {};
+      for (const task of tasks) {
+        if (!photos[task.creatorId]) {
+          const photoUrl = await getUserProfilePhoto(task.creatorId);
+          photos[task.creatorId] = photoUrl || "";
+        }
+      }
+      setProfilePhotos(photos);
+    };
+
+    if (tasks.length > 0) {
+      fetchProfilePhotos();
+    }
+  }, [tasks]);
 
   if (loading) return <LoadingScreen />;
 
@@ -85,9 +128,17 @@ export default function DashboardTaskList() {
                 <tr key={task.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-600">👤</span>
-                      </div>
+                      {profilePhotos[task.creatorId] ? (
+                        <img
+                          src={profilePhotos[task.creatorId]}
+                          alt="Profile"
+                          className="h-10 w-10 rounded-full mr-3 object-cover"
+                        />
+                      ) : (
+                        <div className="h-10 w-10 rounded-full mr-3 bg-gray-100 flex items-center justify-center">
+                          <User className="h-6 w-6 text-gray-400" />
+                        </div>
+                      )}
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
                           {task.creatorName}
@@ -100,7 +151,7 @@ export default function DashboardTaskList() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="h-10 w-10 rounded bg-gradient-to-br from-purple-500 to-pink-500"></div>
+                      {/*<div className="h-10 w-10 rounded bg-gradient-to-br from-purple-500 to-pink-500"></div>*/}
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
                           {task.title}

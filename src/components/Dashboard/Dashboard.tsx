@@ -20,10 +20,13 @@ export default function Dashboard() {
       <main className="flex-1 overflow-y-auto">
         <div className="container mx-auto px-6 py-8">
           <WelcomeCard />
+          <Updates />
+          {/*
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             <Updates />
             <LatestPartnerships />
           </div>
+  */}
           <div className="mt-8">
             <DashboardTaskList />
           </div>

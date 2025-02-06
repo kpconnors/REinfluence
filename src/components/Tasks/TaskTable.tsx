@@ -2,6 +2,7 @@ import React from "react";
 import { ChevronDown } from "lucide-react";
 import { useTasks } from "../../hooks/useTasks";
 import LoadingScreen from "../LoadingScreen";
+import { User } from "lucide-react";
 
 interface TaskTableProps {
   onTaskSelect?: (date: string) => void;
@@ -101,8 +102,8 @@ export default function TaskTable({ onTaskSelect }: TaskTableProps) {
               >
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-600">👤</span>
+                    <div className="h-10 w-10 rounded-full mr-3 bg-gray-100 flex items-center justify-center">
+                      <User className="h-6 w-6 text-gray-400" />
                     </div>
                     <div className="ml-4">
                       <div className="text-sm font-medium text-gray-900">
@@ -116,7 +117,7 @@ export default function TaskTable({ onTaskSelect }: TaskTableProps) {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <div className="h-10 w-10 rounded bg-gradient-to-br from-purple-500 to-pink-500"></div>
+                    {/*<div className="h-10 w-10 rounded bg-gradient-to-br from-purple-500 to-pink-500"></div>*/}
                     <div className="ml-4">
                       <div className="text-sm font-medium text-gray-900">
                         {task.title}

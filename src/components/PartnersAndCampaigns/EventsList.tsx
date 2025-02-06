@@ -1,23 +1,23 @@
-import React from 'react';
-import { Search } from 'lucide-react';
-import { useEvents } from '../../hooks/useEvents';
-import LoadingScreen from '../LoadingScreen';
+import React from "react";
+import { Search } from "lucide-react";
+import { useEvents } from "../../hooks/useEvents";
+import LoadingScreen from "../LoadingScreen";
 
 export default function EventsList() {
   const { events, loading } = useEvents();
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'upcoming':
-        return 'text-blue-600';
-      case 'in_progress':
-        return 'text-green-600';
-      case 'completed':
-        return 'text-gray-600';
-      case 'cancelled':
-        return 'text-red-600';
+      case "upcoming":
+        return "text-blue-600";
+      case "in_progress":
+        return "text-green-600";
+      case "completed":
+        return "text-gray-600";
+      case "cancelled":
+        return "text-red-600";
       default:
-        return 'text-gray-600';
+        return "text-gray-600";
     }
   };
 
@@ -43,29 +43,32 @@ export default function EventsList() {
           <div key={event.id} className="bg-white rounded-lg shadow-sm p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                {event.images.length > 0 ? (
+                {event.imageUrls.length > 0 ? (
                   <img
-                    src={event.images[0]}
+                    src={event.imageUrls[0]}
                     alt={event.title}
                     className="h-12 w-12 rounded-lg object-cover"
                   />
-                ) : (
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500" />
-                )}
+                ) : null}
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900">{event.title}</h3>
+                  <h3 className="text-sm font-medium text-gray-900">
+                    {event.title}
+                  </h3>
                   <p className="text-sm text-gray-500">{event.platform}</p>
                 </div>
               </div>
               <span className={`text-sm ${getStatusColor(event.status)}`}>
-                {event.status.replace('_', ' ').charAt(0).toUpperCase() + event.status.slice(1)}
+                {event.status.replace("_", " ").charAt(0).toUpperCase() +
+                  event.status.slice(1)}
               </span>
             </div>
 
             <div className="mt-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-sm font-medium text-gray-900">Event Date</h4>
+                  <h4 className="text-sm font-medium text-gray-900">
+                    Event Date
+                  </h4>
                   <p className="text-sm text-gray-500">
                     {new Date(event.eventDate).toLocaleDateString()}
                   </p>
