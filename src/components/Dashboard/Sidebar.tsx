@@ -70,7 +70,7 @@ export default function Sidebar() {
             />
           ) : (
             <div className="h-8 w-8 rounded-full mr-3 bg-gray-100 flex items-center justify-center">
-              <User className="h-4 w-4 text-gray-400" />
+              <User className="h-6 w-6 text-gray-400" />
             </div>
           )}
           <span className="text-sm">

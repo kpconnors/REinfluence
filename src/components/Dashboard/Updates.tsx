@@ -1,27 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { User, Check, X } from 'lucide-react';
-import { usePartnerships } from '../../hooks/usePartnerships';
-import { PartnershipRequest } from '../../types/partnership';
-import { useFirestore } from '../../hooks/useFirestore';
+import React, { useEffect, useState } from "react";
+import { User, Check, X } from "lucide-react";
+import { usePartnerships } from "../../hooks/usePartnerships";
+import { PartnershipRequest } from "../../types/partnership";
+import { useFirestore } from "../../hooks/useFirestore";
 
 export default function Updates() {
-  const [requests, setRequests] = useState<(PartnershipRequest & { requesterName: string })[]>([]);
+  const [requests, setRequests] = useState<
+    (PartnershipRequest & { requesterName: string })[]
+  >([]);
   const [loading, setLoading] = useState(true);
-  const { getPartnershipRequests, approveRequest, denyRequest } = usePartnerships();
-  const { get } = useFirestore('users');
+  const { getPartnershipRequests, approveRequest, denyRequest } =
+    usePartnerships();
+  const { get } = useFirestore("users");
 
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const receivedRequests = await getPartnershipRequests('received');
-        
+        const receivedRequests = await getPartnershipRequests("received");
+
         // Get requester details for each request
         const requestsWithNames = await Promise.all(
           receivedRequests.map(async (request) => {
             const requester = await get(request.requesterId);
             return {
               ...request,
-              requesterName: requester?.fullName || 'Unknown User'
+              requesterName: requester?.fullName || "Unknown User",
+              requesterPhoto: requester?.profilePhotoUrl || null,
             };
           })
         );
@@ -33,7 +37,7 @@ export default function Updates() {
 
         setRequests(sortedRequests);
       } catch (err) {
-        console.error('Error fetching requests:', err);
+        console.error("Error fetching requests:", err);
       } finally {
         setLoading(false);
       }
@@ -43,12 +47,12 @@ export default function Updates() {
   }, [getPartnershipRequests, get]);
 
   const getRequestText = (request: PartnershipRequest) => {
-    if (request.type === 'campaign') {
-      return 'has requested to join your campaign';
+    if (request.type === "campaign") {
+      return "has requested to join your campaign";
     } else {
-      return request.agreeToPay ? 
-        'has requested to join your paid event' : 
-        'has requested to join your event';
+      return request.agreeToPay
+        ? "has requested to join your paid event"
+        : "has requested to join your event";
     }
   };
 
@@ -56,11 +60,13 @@ export default function Updates() {
     try {
       await approveRequest(requestId);
       // Update the request status locally
-      setRequests(prev => prev.map(req => 
-        req.id === requestId ? { ...req, status: 'approved' } : req
-      ));
+      setRequests((prev) =>
+        prev.map((req) =>
+          req.id === requestId ? { ...req, status: "approved" } : req
+        )
+      );
     } catch (err) {
-      console.error('Error approving request:', err);
+      console.error("Error approving request:", err);
     }
   };
 
@@ -68,25 +74,27 @@ export default function Updates() {
     try {
       await denyRequest(requestId);
       // Update the request status locally
-      setRequests(prev => prev.map(req => 
-        req.id === requestId ? { ...req, status: 'denied' } : req
-      ));
+      setRequests((prev) =>
+        prev.map((req) =>
+          req.id === requestId ? { ...req, status: "denied" } : req
+        )
+      );
     } catch (err) {
-      console.error('Error denying request:', err);
+      console.error("Error denying request:", err);
     }
   };
 
   const formatDate = (timestamp: any) => {
-    if (!timestamp) return '';
+    if (!timestamp) return "";
     const date = new Date(timestamp.seconds * 1000);
     return date.toLocaleDateString();
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'approved':
+      case "approved":
         return <span className="text-green-600 text-sm">Approved</span>;
-      case 'denied':
+      case "denied":
         return <span className="text-red-600 text-sm">Denied</span>;
       default:
         return null;
@@ -115,12 +123,20 @@ export default function Updates() {
               className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition-colors"
             >
               <div className="flex items-center space-x-3">
-                <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                  <User className="h-4 w-4 text-gray-400" />
+                <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  {request.requesterPhoto ? (
+                    <img
+                      src={request.requesterPhoto}
+                      alt={`${request.requesterName}'s profile`}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <User className="h-6 w-6 text-gray-400" />
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-gray-900">
-                    <span className="font-medium">{request.requesterName}</span>{' '}
+                    <span className="font-medium">{request.requesterName}</span>{" "}
                     {getRequestText(request)}
                   </p>
                   <p className="text-xs text-gray-500">
@@ -129,7 +145,7 @@ export default function Updates() {
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                {request.status === 'pending' ? (
+                {request.status === "pending" ? (
                   <>
                     <button
                       onClick={() => handleApprove(request.id!)}
@@ -154,7 +170,9 @@ export default function Updates() {
           ))}
         </div>
       ) : (
-        <p className="text-gray-500 text-center py-4">No new partnership requests</p>
+        <p className="text-gray-500 text-center py-4">
+          No new partnership requests
+        </p>
       )}
     </div>
   );

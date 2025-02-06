@@ -9,7 +9,7 @@ import { useCampaigns } from "../../hooks/useCampaigns";
 import { useEvents } from "../../hooks/useEvents";
 import LoadingScreen from "../LoadingScreen";
 
-type TabType = "campaigns" | "events" | "partners" | "exclusive";
+type TabType = "campaigns" | "events" | "partners" /*| "exclusive"*/;
 
 export default function PartnersAndCampaigns() {
   const location = useLocation();
@@ -21,7 +21,10 @@ export default function PartnersAndCampaigns() {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const tab = params.get("tab");
-    if (tab && ["campaigns", "events", "partners", "exclusive"].includes(tab)) {
+    if (
+      tab &&
+      ["campaigns", "events", "partners" /*"exclusive"*/].includes(tab)
+    ) {
       setActiveTab(tab as TabType);
     }
   }, [location]);
@@ -56,8 +59,9 @@ export default function PartnersAndCampaigns() {
         return <EventsList />;
       case "partners":
         return <PartnersList />;
+      /*
       case "exclusive":
-        return <ExclusivePartnersList />;
+        return <ExclusivePartnersList />;*/
       case "campaigns":
       default:
         return (
@@ -97,9 +101,10 @@ export default function PartnersAndCampaigns() {
                     <tr key={campaign.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          {campaign.images && campaign.images.length > 0 ? (
+                          {campaign.imageUrls &&
+                          campaign.imageUrls.length > 0 ? (
                             <img
-                              src={campaign.images[0]}
+                              src={campaign.imageUrls[0]}
                               alt={campaign.title}
                               className="h-10 w-10 rounded object-cover"
                             />
@@ -188,11 +193,11 @@ export default function PartnersAndCampaigns() {
                 campaigns.
               </p>
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 bg-[#1d4e74] text-white rounded-md hover:bg-[#163a57] transition-colors">
+            {/*<button className="flex items-center gap-2 px-4 py-2 bg-[#1d4e74] text-white rounded-md hover:bg-[#163a57] transition-colors">
               <Plus className="h-5 w-5" />
               Create Exclusive Partnerships
               <HelpCircle className="h-4 w-4 ml-1" />
-            </button>
+  </button>*/}
           </div>
 
           <div className="border-b border-gray-200">
@@ -233,6 +238,7 @@ export default function PartnersAndCampaigns() {
               >
                 My partners
               </button>
+              {/*
               <button
                 onClick={() => setActiveTab("exclusive")}
                 className={`flex items-center px-1 py-4 border-b-2 font-medium text-sm ${
@@ -242,7 +248,7 @@ export default function PartnersAndCampaigns() {
                 }`}
               >
                 Exclusive partners
-              </button>
+              </button>*/}
             </nav>
           </div>
 
